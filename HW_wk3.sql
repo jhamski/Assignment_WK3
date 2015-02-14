@@ -2,12 +2,12 @@
 -- James Hamski | james.hamski@spsmail.cuny.edu
 
 -- Create a table of net generation in thousands of megawatt hours for 2013 by INSERT entry
-DROP TABLE IF EXISTS net_gen_2013;
+DROP TABLE IF EXISTS NetGen_2013;
 
-CREATE TABLE net_gen_2013
-(SOURCE varchar,  NETGEN double precision);
+CREATE TABLE NetGen_2013
+(Source varchar,  NetGen integer);
 
-INSERT INTO net_gen_2013
+INSERT INTO NetGen_2013
 VALUES
 ('coal', 1584194),
 ('petroleum_liquids', 13645),
@@ -26,11 +26,48 @@ VALUES
 ('other', 13639);
 
 -- Create a table of net generation in thousands of megawatt hours for 2012 by .csv entry
+DROP TABLE IF EXISTS NetGen_2012;
+
+CREATE TABLE NetGen_2012
+(Source varchar,  NetGen integer);
+
+COPY NetGen_2012 FROM '/Users/Shared/net_gen_2012.csv' DELIMITERS ',' CSV;
+
+-- Create table of carbon emissions from 2012 and 2013
+DROP TABLE IF EXISTS CarbonEmissions;
+
+CREATE TABLE CarbonEmissions
+(Source varchar,  Emissions_2012 integer, Emissions_2013 integer);
+
+COPY CarbonEmissions FROM '/Users/Shared/carbon_emissions.csv' DELIMITERS ',' CSV;
+
+SELECT * FROM CarbonEmissions
+SELECT * FROM NetGen_2013 
+SELECT * FROM NetGen_2012
+
+-- Create a table to translate different categories between NetGen and CarbonEmissions tables
+DROP TABLE IF EXISTS GenNames;
+
+CREATE TABLE GenNames
+(NetGenName varchar,  CarbonEmissionsName varchar);
+
+INSERT INTO GenNames
+VALUES
+('coal', 'Coal'),
+('petroleum_liquids', 'Petroleum'),
+('petroleum_coke', 'Petroleum'),
+('natural_gas', 'Natural Gas');
+
+-- What is the carbon intensity (tons of CO2 produced per thousands of megawatt hours generated) for coal, gas, and petroleum in 2013?
+
+SELECT 
+NetGen_2013.Source, NetGen, Emissions_2013, Emissions_2013 / NetGen AS Carbon_Intensity
+FROM NetGen_2013
+JOIN GenNames
+ON NetGen_2013.Source = GenNames.NetGenName
+JOIN CarbonEmissions
+ON GenNames.CarbonEmissionsName = CarbonEmissions.Source
 
 
--- Create a table of classificaitons
-
-CREATE TABLE gen_type
-(SOURCE varchar,  NETGEN double precision);
 
 
