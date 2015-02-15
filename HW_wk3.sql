@@ -41,11 +41,13 @@ CREATE TABLE CarbonEmissions
 
 COPY CarbonEmissions FROM '/Users/Shared/carbon_emissions.csv' DELIMITERS ',' CSV;
 
-SELECT * FROM CarbonEmissions
-SELECT * FROM NetGen_2013 
-SELECT * FROM NetGen_2012
+-- Review dataset
+SELECT * FROM CarbonEmissions;
+SELECT * FROM NetGen_2013; 
+SELECT * FROM NetGen_2012;
 
--- Create a table to translate different categories between NetGen and CarbonEmissions tables
+-- Create a table to translate different categories between NetGen_yyyy and CarbonEmissions tables
+-- GenNames has a one to one relationship with CarbonEmissions and a one to many relationship with NetGen_yyyy
 DROP TABLE IF EXISTS GenNames;
 
 CREATE TABLE GenNames
@@ -66,7 +68,7 @@ FROM NetGen_2013
 JOIN GenNames
 ON NetGen_2013.Source = GenNames.NetGenName
 JOIN CarbonEmissions
-ON GenNames.CarbonEmissionsName = CarbonEmissions.Source
+ON GenNames.CarbonEmissionsName = CarbonEmissions.Source;
 
 
 
