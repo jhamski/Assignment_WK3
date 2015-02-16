@@ -63,7 +63,7 @@ VALUES
 -- What is the carbon intensity (tons of CO2 produced per thousands of megawatt hours generated) for coal, gas, and petroleum in 2013?
 
 SELECT 
-NetGen_2013.Source, NetGen, Emissions_2013, Emissions_2013 / NetGen AS Carbon_Intensity
+NetGen_2013.Source, NetGen, Emissions_2013, Emissions_2013 / CAST(NetGen AS DECIMAL) AS Carbon_Intensity
 FROM NetGen_2013
 JOIN GenNames
 ON NetGen_2013.Source = GenNames.NetGenName
